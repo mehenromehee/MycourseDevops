@@ -1,0 +1,39 @@
+name: Node Matrix pipeline
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+    
+jobs:
+  node:
+    runs-on: wsl-linux
+    strategy:
+      matrix:
+        node-version: [24, 26]
+    steps:
+      - name: clone code
+        uses: actions/checkout@v7
+
+      - name: Setup NodeJs
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install Dependencies
+        run: npm install
+        
+      - name: Create .env file
+        run: 
+          echo "PORT=8080" >> .env.development
+          echo "App=GHA-NODE-DEV-APP" >> .env.development
+          echo "PORT=5000" >> .env.production
+          echo "App=GHA-NODE-PROD-APP" >> .env.production
+          
+      - name: Run the application
+        run: |
+          node apt.js &
+          sleep 5
+          curl http://localhost:3000
+          curl http://localhost:3000/health
+          pkill -f "node apt.js"
