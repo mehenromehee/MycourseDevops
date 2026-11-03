@@ -1,0 +1,29 @@
+name: Node basic pipeline
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  node:
+    runs-on: wsl-linux
+
+    steps:
+      - name: clone code
+        uses: actions/checkout@v7
+
+      - name: Setup NodeJs
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run the application
+        run: |
+          node apt.js &
+          sleep 5
+          curl http://localhost:8080
+          curl http://localhost:8080/health
+          pkill -f "node apt.js"
