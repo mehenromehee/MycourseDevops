@@ -2,8 +2,7 @@ name: Basic GHA pipeline
 
 on:
   push:
-    branches:
-      - main
+    branches: ["main"]
 
 jobs:
   basic:
@@ -11,4 +10,4 @@ jobs:
 
     steps:
       - name: Basic GHA pipeline
-        run: echo "Basic GitHub Action pipeline"
+        run: echo "Basic GitHub Action Pipeline"
